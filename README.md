@@ -1,79 +1,131 @@
+Here’s an updated GitHub README based on your latest `docker-compose.yml` and Dockerfile setup, incorporating the environment variables and changes:
+
+---
+
 # 🧑‍💼 Employee Manager System
 
-This application is a **Spring Boot** based system that allows managing **Employees**, their **Departments**, and the **Tasks** assigned to them. It's designed to help companies streamline their employee data management, including tasks and department assignments.
+Welcome to the **Employee Manager System** repository! This is a **Spring Boot** application designed to manage **Employees**, **Departments**, and **Tasks**. It leverages **Docker** for containerization, making it easier to set up and run the application locally or in any environment.
 
 ---
 
 ## 🚀 Features
 
-- **Employee Management**: Add, update, delete employees and assign them to departments.
+- **Employee Management**: Add, update, and delete employees.
 - **Department Management**: Create and manage departments.
-- **Task Assignment**: Assign tasks to employees and track their progress.
-- **Database Integration**: MySQL for storing employee and department data.
+- **Task Management**: Assign and track tasks for employees.
+- **Database Integration**: Uses MySQL to store employee, department, and task data.
+- **Dockerized**: Fully containerized using Docker for easy setup and execution.
 
 ---
 
 ## 🛠️ Installation Steps
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/your-username/employee-manager.git
-   ```
+Follow these steps to get started with the **Employee Manager System**:
 
-2. **Navigate to the project directory**:
-   ```bash
-   cd employee-manager
-   ```
+### 1. Clone the Repository
+Clone the repository to your local machine:
+```bash
+git clone https://github.com/your-username/employee-manager.git
+```
 
-3. **Set up MySQL Database**:
-   - Make sure you have MySQL installed on your local machine or use Docker for MySQL.
-   - Create a database and user for the application.
+### 2. Set Up MySQL Database (via Docker)
+The application uses MySQL as the database. Docker will automatically set up the MySQL service for you.
 
-4. **Configure Database in `application.properties`**:
-   ```properties
-   spring.datasource.url=jdbc:mysql://localhost:3306/employee_manager
-   spring.datasource.username=root
-   spring.datasource.password=yourpassword
-   spring.jpa.hibernate.ddl-auto=update
-   ```
+### 3. Configure the `docker-compose.yml`
+Ensure the following changes are made in your `docker-compose.yml` to configure your application and MySQL database:
 
-5. **Build and Run the Application**:
-   ```bash
-   mvn clean install
-   mvn spring-boot:run
-   ```
+```yaml
+version: '3.8'
+
+services:
+  employeemanager_db:
+    image: mysql:8.0
+    container_name: employeemanager_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: yourrootpassword  # Root password for MySQL
+      MYSQL_DATABASE: employee_manager      # The database for the app
+    ports:
+      - "3307:3306"  # Exposes MySQL on port 3307 on your host machine
+    volumes:
+      - db_data:/var/lib/mysql  # Persist MySQL data
+
+  employeemanager_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: employeemanager_app
+    ports:
+      - "8080:8080"  # Exposes Spring Boot app on port 8080
+    depends_on:
+      - employeemanager_db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://employeemanager_db:3306/employee_manager
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: yourrootpassword  # Same password as MYSQL_ROOT_PASSWORD
+
+volumes:
+  db_data:  # Define a volume to persist MySQL data
+```
+
+### 4. Build the Docker Containers
+Now that everything is set up, run the following command to start the application and MySQL containers:
+
+```bash
+docker-compose up --build
+```
+
+This command will build and start the containers, setting up both the MySQL database and the Spring Boot application.
+
+### 5. Access the Application
+- The application will be accessible at `http://localhost:8080` on your machine.
+- MySQL will be available at `localhost:3307` (for local development).
 
 ---
 
 ## ⚠️ How to Fix "Connection Failed" Error in MySQL
 
-If you're getting a `java.sql.SQLException: Access denied for user 'root'@'localhost'` error, follow these steps:
+If you encounter a `java.sql.SQLException: Access denied for user 'root'@'localhost'` error, follow these troubleshooting steps:
 
-1. **Check MySQL User Permissions**:
-   - Login to MySQL:
-     ```bash
-     mysql -u root -p
-     ```
-   - Grant all privileges to the user (replace `yourpassword` with your MySQL password):
-     ```sql
-     GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY 'yourpassword';
-     FLUSH PRIVILEGES;
-     ```
+### 1. **Verify MySQL Permissions**
 
-2. **Verify the Database Connection**:
-   - Make sure MySQL is running and the port is correct. If using Docker, ensure MySQL container is running and accessible.
+Make sure MySQL is configured correctly. If using Docker, ensure that the `MYSQL_ROOT_PASSWORD` is correctly set in your `docker-compose.yml` file.
 
-3. **Check for Database URL Configuration**:
-   - Ensure your `application.properties` file has the correct database URL, username, and password.
+### 2. **Check MySQL Access**
 
-4. **Restart the Application**:
-   - After making the above changes, restart the Spring Boot application to reflect the new database configurations.
+If you are facing access issues, you can check MySQL container logs to debug:
+```bash
+docker logs employeemanager_db
+```
+
+### 3. **Ensure Correct Database URL Configuration**
+
+In your `docker-compose.yml`, ensure the `SPRING_DATASOURCE_URL` is configured to point to the correct MySQL container:
+
+```yaml
+SPRING_DATASOURCE_URL: jdbc:mysql://employeemanager_db:3306/employee_manager
+```
+
+- **`employeemanager_db`** is the name of the MySQL container, and **3306** is the default MySQL port inside the container.
+
+### 4. **Grant Permissions to MySQL User**
+
+If you manually need to grant permissions, follow these steps:
+- Enter the MySQL container:
+  ```bash
+  docker exec -it employeemanager_db mysql -u root -p
+  ```
+- Run the following commands:
+  ```sql
+  GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'yourrootpassword';
+  FLUSH PRIVILEGES;
+  ```
 
 ---
 
 ## 📊 UML Diagram
 
-Below is the UML diagram representing the relationship between **Employee**, **Department**, and **Task** entities:
+Below is the UML diagram that shows the relationships between **Employee**, **Department**, and **Task** entities:
 
 ```plaintext
 +-----------------+        +------------------+        +----------------+
@@ -167,3 +219,6 @@ For any questions or suggestions, reach out to [jitesh@example.com](mailto:jites
 
 ### Enjoy using the Employee Manager! 😊
 
+---
+
+This README provides clear steps for setting up the application with Docker, including error troubleshooting and a UML diagram for visual representation of the database entities.
