@@ -1,7 +1,3 @@
-Here's an example of a visually appealing GitHub README file using emojis, installation steps, error resolution for MySQL connection failures, and a UML diagram based on your provided entities (`Employee`, `Department`, and `Task`):
-
----
-
 # 🧑‍💼 Employee Manager System
 
 This application is a **Spring Boot** based system that allows managing **Employees**, their **Departments**, and the **Tasks** assigned to them. It's designed to help companies streamline their employee data management, including tasks and department assignments.
@@ -171,6 +167,3 @@ For any questions or suggestions, reach out to [jitesh@example.com](mailto:jites
 
 ### Enjoy using the Employee Manager! 😊
 
----
-
-This README is designed to be informative, visually appealing, and easy to navigate. You can enhance it further with additional customizations like badges or more detailed explanations as needed.
