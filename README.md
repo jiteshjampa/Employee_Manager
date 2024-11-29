@@ -1,20 +1,34 @@
-Here’s an updated GitHub README based on your latest `docker-compose.yml` and Dockerfile setup, incorporating the environment variables and changes:
-
----
-
 # 🧑‍💼 Employee Manager System
 
-Welcome to the **Employee Manager System** repository! This is a **Spring Boot** application designed to manage **Employees**, **Departments**, and **Tasks**. It leverages **Docker** for containerization, making it easier to set up and run the application locally or in any environment.
+Welcome to the **Employee Manager System** repository! This **Spring Boot** application allows you to manage **Employees**, **Departments**, and **Tasks** using **CRUD operations**. The application is **Dockerized** for easier setup and execution.
 
 ---
 
 ## 🚀 Features
 
-- **Employee Management**: Add, update, and delete employees.
-- **Department Management**: Create and manage departments.
-- **Task Management**: Assign and track tasks for employees.
-- **Database Integration**: Uses MySQL to store employee, department, and task data.
-- **Dockerized**: Fully containerized using Docker for easy setup and execution.
+- **Employee Management**:
+  - **Create** new employees.
+  - **Read** employee details.
+  - **Update** employee information.
+  - **Delete** employees from the system.
+  
+- **Department Management**:
+  - **Create** new departments.
+  - **Read** department details.
+  - **Update** department information.
+  - **Delete** departments from the system.
+
+- **Task Management**:
+  - **Create** new tasks for employees.
+  - **Read** task details.
+  - **Update** task assignments or descriptions.
+  - **Delete** tasks from the system.
+
+- **Database Integration**:
+  - Uses **MySQL** to store employee, department, and task data.
+
+- **Dockerized**:
+  - Fully containerized using Docker for easy setup and execution.
 
 ---
 
@@ -83,6 +97,114 @@ This command will build and start the containers, setting up both the MySQL data
 
 ---
 
+## ⚙️ CRUD Operations
+
+The **Employee Manager System** supports **CRUD operations** for **Departments**, **Employees**, and **Tasks**. Here's a breakdown of the available operations for each entity:
+
+### Department CRUD Operations
+
+- **Create a Department**:
+  - Send a `POST` request to `/api/departments` with department data in the request body.
+  
+  Example request:
+  ```json
+  {
+    "name": "Sales"
+  }
+  ```
+
+- **Get All Departments**:
+  - Send a `GET` request to `/api/departments` to retrieve all departments.
+
+- **Get a Single Department**:
+  - Send a `GET` request to `/api/departments/{id}` to retrieve a department by its ID.
+
+- **Update a Department**:
+  - Send a `PUT` request to `/api/departments/{id}` with the updated department data.
+
+  Example request:
+  ```json
+  {
+    "name": "Marketing"
+  }
+  ```
+
+- **Delete a Department**:
+  - Send a `DELETE` request to `/api/departments/{id}` to delete a department.
+
+---
+
+### Employee CRUD Operations
+
+- **Create an Employee**:
+  - Send a `POST` request to `/api/employees` with employee data in the request body.
+
+  Example request:
+  ```json
+  {
+    "name": "John Doe",
+    "role": "Developer",
+    "departmentId": 1
+  }
+  ```
+
+- **Get All Employees**:
+  - Send a `GET` request to `/api/employees` to retrieve all employees.
+
+- **Get a Single Employee**:
+  - Send a `GET` request to `/api/employees/{id}` to retrieve an employee by its ID.
+
+- **Update an Employee**:
+  - Send a `PUT` request to `/api/employees/{id}` with the updated employee data.
+
+  Example request:
+  ```json
+  {
+    "name": "John Smith",
+    "role": "Senior Developer",
+    "departmentId": 1
+  }
+  ```
+
+- **Delete an Employee**:
+  - Send a `DELETE` request to `/api/employees/{id}` to delete an employee.
+
+---
+
+### Task CRUD Operations
+
+- **Create a Task**:
+  - Send a `POST` request to `/api/tasks` with task data in the request body.
+
+  Example request:
+  ```json
+  {
+    "description": "Complete the project documentation",
+    "employeeId": 1
+  }
+  ```
+
+- **Get All Tasks**:
+  - Send a `GET` request to `/api/tasks` to retrieve all tasks.
+
+- **Get a Single Task**:
+  - Send a `GET` request to `/api/tasks/{id}` to retrieve a task by its ID.
+
+- **Update a Task**:
+  - Send a `PUT` request to `/api/tasks/{id}` with the updated task data.
+
+  Example request:
+  ```json
+  {
+    "description": "Complete the project documentation (updated)"
+  }
+  ```
+
+- **Delete a Task**:
+  - Send a `DELETE` request to `/api/tasks/{id}` to delete a task.
+
+---
+
 ## ⚠️ How to Fix "Connection Failed" Error in MySQL
 
 If you encounter a `java.sql.SQLException: Access denied for user 'root'@'localhost'` error, follow these troubleshooting steps:
@@ -143,82 +265,14 @@ Below is the UML diagram that shows the relationships between **Employee**, **De
 - **Department** has a **one-to-many** relationship with **Employee**.
 - **Employee** has a **many-to-one** relationship with **Department**.
 - **Employee** has a **one-to-many** relationship with **Task**.
-- **Task** has a **many-to-one** relationship with **Employee**.
+- **Task** has a
+
+ **many-to-one** relationship with **Employee**.
 
 ---
 
-## 📝 Entity Classes
+## 👨‍💻 Contributing
 
-### `Department.java`
-```java
-@Entity
-@Data
-public class Department {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private String name;
-
-    @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
-    private List<Employee> employees;
-}
-```
-
-### `Employee.java`
-```java
-@Entity
-@Data
-public class Employee {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private String name;
-    private String role;
-
-    @ManyToOne
-    @JoinColumn(name = "department_id")
-    private Department department;
-
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Task> tasks;
-}
-```
-
-### `Task.java`
-```java
-@Entity
-@Data
-public class Task {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private String description;
-
-    @ManyToOne
-    @JoinColumn(name = "employee_id")
-    private Employee employee;
-}
-```
+We welcome contributions! If you have any ideas or improvements, feel free to fork the repository and submit a pull request.
 
 ---
-
-## 🎯 Contributions
-
-Feel free to fork this repository and contribute by creating issues, submitting pull requests, and suggesting improvements!
-
----
-
-## 📧 Contact
-
-For any questions or suggestions, reach out to [jitesh@example.com](mailto:jitesh@example.com).
-
----
-
-### Enjoy using the Employee Manager! 😊
-
----
-
-This README provides clear steps for setting up the application with Docker, including error troubleshooting and a UML diagram for visual representation of the database entities.
