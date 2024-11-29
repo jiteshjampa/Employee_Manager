@@ -225,7 +225,7 @@ docker logs employeemanager_db
 In your `docker-compose.yml`, ensure the `SPRING_DATASOURCE_URL` is configured to point to the correct MySQL container:
 
 ```yaml
-SPRING_DATASOURCE_URL: jdbc:mysql://employeemanager_db:3306/employee_manager
+spring.datasource.url=${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/employee_manager}
 ```
 
 - **`employeemanager_db`** is the name of the MySQL container, and **3306** is the default MySQL port inside the container.
