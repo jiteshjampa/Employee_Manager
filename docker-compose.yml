@@ -7,7 +7,7 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: yourrootpassword # Root user password
-      MYSQL_DATABASE: employee_manager      # Database name
+      MYSQL_DATABASE: employee_manager     # Database name
     ports:
       - "3307:3306"
     volumes:
@@ -26,6 +26,8 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://employeemanager_db:3306/employee_manager
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: yourrootpassword
+    # This command ensures that the application starts only after the tests are run
+    command: ["sh", "-c", "mvn test && java -jar employeemanager-app.jar"]
 
 volumes:
   db_data:
