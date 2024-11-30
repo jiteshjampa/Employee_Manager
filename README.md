@@ -98,6 +98,73 @@ This command will build and start the containers, setting up both the MySQL data
 - The application will be accessible at `http://localhost:8080` on your machine.
 - MySQL will be available at `localhost:3307` (for local development).
 
+To add the steps for testing the `DepartmentController` inside a Docker container to your GitHub `README.md`, format the instructions in Markdown for clarity and readability. Below is a sample snippet you can copy and modify as needed:
+
+---
+
+## Testing the `DepartmentController` in a Docker Container
+
+Follow these steps to manually run the `DepartmentController` test in the Docker container:
+
+### 1. Identify the Running Container
+Run the following command to find the container ID or name where your Spring Boot application is running:
+```bash
+docker ps
+```
+
+### 2. Access the Docker Container
+Use the `docker exec` command to access the container:
+```bash
+docker exec -it <container-id-or-name> /bin/bash
+```
+
+### 3. Navigate to the Project Directory
+Inside the container, navigate to the directory where the Spring Boot application is located:
+```bash
+cd /path/to/your/springboot/project
+```
+
+### 4. Run the Tests
+Depending on the build tool used in your project, run the tests as follows:
+
+- **For Maven Users:**
+  - To run the specific test for `DepartmentController`:
+    ```bash
+    ./mvnw test -Dtest=DepartmentControllerTest
+    ```
+  - To run all tests:
+    ```bash
+    ./mvnw test
+    ```
+
+- **For Gradle Users:**
+  - To run the specific test for `DepartmentController`:
+    ```bash
+    ./gradlew test --tests com.example.yourpackage.DepartmentControllerTest
+    ```
+  - To run all tests:
+    ```bash
+    ./gradlew test
+    ```
+
+### 5. Verify the Test Results
+The test results will be displayed in the terminal. Check the output to confirm if the tests passed or failed.
+
+### 6. Exit the Container
+Once done, exit the container:
+```bash
+exit
+```
+
+---
+
+### Optional: Running Tests Locally
+If you prefer to run the tests locally, ensure the project is properly set up with all dependencies, then execute the tests using the appropriate Maven or Gradle commands.
+
+---
+
+This snippet provides clear, step-by-step instructions for testing inside the container and makes it easier for others to understand. Let me know if you'd like further refinements! 😊
+
 ---
 
 ## ⚙️ CRUD Operations
